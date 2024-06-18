@@ -75,7 +75,6 @@ Gui,Add,Button,X+5 GSTART,&Start
 Gui,Add,Button,X+5 GSETBEEPS,&JustBeep
 Gui,Add,Button,X+5 GEXITBUTTON,&Cancel
 
-
 Gui,Show,,%applicationname%
 
 
@@ -138,15 +137,75 @@ CONFIRMFINISHED:
 	Gui,Add,Button,X+5 GDelay30,&Delay30
 	Gui,Add,Button,X+5 GDelay60,&Delay60
 	
+	dont_disturb_apps := ["Warframe", "Overwatch", "DARK SOULS III", "Heroes of the Storm", "Warhammer", "Battlerite", "MONSTER HUNTER"]
+	for _, Title in dont_disturb_apps {
+        IfWinActive, %Title%
+		{
+            dont_disturb := true
+        }
+    }
+	IfWinActive, Warframe
+	{
+		dont_disturb := true
+		SoundBeep, 750, 500
+		SoundBeep, 750, 500
+		SoundBeep, 750, 500
+		SoundBeep, 750, 500
+		SoundBeep, 750, 500
+	}
+	
+	IfWinActive, Overwatch
+	{
+		dont_disturb := true
+	}
+	
+	IfWinActive, DARK SOULS III
+	{
+		dont_disturb := true
+		SoundBeep, 750, 500
+	}
 
 	IfWinActive, Heroes of the Storm
 	{
+		dont_disturb := true
 		SoundBeep, 750, 500
-		Gui,Show, NoActivate,%applicationname%
-		WinSet, Bottom,, %applicationname%
-	} else {
-		Gui,Show,,%applicationname%
 	}
+	
+	/*
+	if(WinActive("ahk_exe eldenring.exe"))
+	{
+		dont_disturb := true
+		SoundBeep, 750, 500
+	}
+	*/
+
+	IfWinActive, ELDEN RING
+	{
+		dont_disturb := true
+	}
+	
+
+	IfWinActive, Warhammer
+	{
+		dont_disturb := true
+	}
+
+	IfWinActive, Battlerite
+	{
+		dont_disturb := true
+	}
+	
+	
+	if(dont_disturb){
+		WinGetTitle, title, A
+		SoundBeep, 750, 500
+		SoundBeep, 750, 500
+		
+		WinWaitNotActive, %title%
+	}
+	
+	Gui,Show,,%applicationname%
+	
 	Return
 
 Delay60:
@@ -170,7 +229,8 @@ Delay5:
 
 
 SETBEEPS:
-BeepCount:=4
+BeepCount:=3
+Goto, START
 
 CUSTOMSUBMIT:
 customDelaySet := 1
@@ -249,17 +309,20 @@ Return
 TEST:
 ALARM:
 SoundBeep, 750, 500
+SoundBeep, 750, 500
 if(BeepCount<0){
 	;MsgBox,64,%applicationname%,% message
 	Goto, CONFIRMFINISHED
 }
+
 While(BeepCount>0){
 	SoundBeep, 750, 500
 	BeepCount--
 ;	sleep 1000
 }
 
-if( BeepCount= -2)
+; done so I can pull open the tray and look at the alarm that I was on "dont disturb" mode for
+if( BeepCount= -2) 
 {
 	ExitApp
 }
